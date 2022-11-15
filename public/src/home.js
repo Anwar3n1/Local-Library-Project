@@ -53,20 +53,25 @@ function getMostPopularBooks(books) {
 }
 
 function getMostPopularAuthors(books, authors) {
- let authorsArray = [];
-  authors.forEach((author) => {
-  const byAuthor = books.filter((book) => book.authorId === author.id);
-  let borrowers = 0
-  byAuthor.forEach((book) => (borrowers += book.borrows.length));
-  authorsArray.push({
-    name: author.name.first + " " + author.name.last,
-    count: borrowers,
-  });
-  });
-    authorsArray.sort((a, b) => (a.count < b.count ? 1 : -1));
-    authorsArray.length =5;
-    return authorsArray
-  }
+  let popularAuthors = [];
+  books.forEach((book) => {
+    authors.forEach((author) => {
+      const popularAuthor = `${author.name.first} ${author.name.last}`
+      if (book.authorId === author.id) {
+        popularAuthors.push({
+          name: popularAuthor,
+          count: book.borrows.length
+        });
+      }
+      
+    })
+    
+  })
+  return topFive(popularAuthors)
+}
+function topFive(array) {
+  return array.sort ((a,b) => b.count - a.count).slice(0,5)
+}
 
 module.exports = {
   getTotalBooksCount,
